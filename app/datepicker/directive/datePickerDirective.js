@@ -8,7 +8,7 @@
             templateUrl: 'app/datepicker/templates/datePickerTemplate.html',
             link: link,
             scope: {
-                config: "="
+                
             }
         }
 
