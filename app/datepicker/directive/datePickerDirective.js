@@ -17,18 +17,24 @@
             scope.monthList = [];
             scope.dayList = [];
             scope.currentYear = scope.config.maxYear;
-            scope.currentMonth = 1;
+            scope.currentMonth = 0;
 
             function init() {
+                scope.yearList.length = 0;
+                scope.monthList.length = 0;
                 for(let i = scope.config.minYear; i < scope.config.maxYear; i++) {
                     scope.yearList.push(i);
                 }
-                for(let i = 1; i <= 12; i++) {
+                for(let i = 0; i < 12; i++) {
                     scope.monthList.push(i);
                 }
             }
+            init();
+
+
 
             function fillDayList(year, month) {
+                scope.dayList.length = 0;
                 let dayNo = 1;
                 const m_31 = [1, 3, 5, 7, 8, 10, 12];
                 const m_30 = [4, 6, 9, 11];
@@ -81,9 +87,14 @@
                     }
                 }
             }
+            scope.test = function() {
+                console.log(scope.currentMonth);
+                console.log(scope.currentYear);
+                fillDayList(scope.currentYear, scope.currentMonth);
+            }
             function unitTest() {
-                fillDayList(2018, 10);
-                console.log(scope.dayList);
+                fillDayList(scope.currentYear, scope.currentMonth);
+                console.log(scope.monthList);
             }
             unitTest();
         }
