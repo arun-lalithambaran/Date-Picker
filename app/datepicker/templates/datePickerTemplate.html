@@ -33,48 +33,35 @@ td {
 <div class="container">
     <div class="header">
         <div style="width: 20%">
-            <button>Left</button>
+            <button ng-click="previousMonth()">Left</button>
         </div>
         <div class="selectors">
-            <select ng-change="test()" ng-model="currentMonth">
-                <option ng-selected="currentMonth == month" ng-repeat="month in monthList track by $index">{{month}}</option>
+            <select ng-model="currentMonth">
+                <option value="{{month.no}}" ng-repeat="month in monthList track by $index">{{month.text}}</option>
             </select>
-            <select ng-change="test()" ng-model="currentYear">
+            <select ng-model="currentYear">
                 <option ng-repeat="year in yearList track by $index">{{year}}</option>
             </select>
         </div>
         <div style="width: 20%">
-                <button>Right</button>
+                <button ng-click="nextMonth()">Right</button>
             </div>
     </div>
 
     <div class="body">
-        <!-- <div class="weekRow">
-            <div class="dayCol">Sun</div>
-            <div class="dayCol">Mon</div>
-            <div class="dayCol">Tue</div>
-            <div class="dayCol">Wed</div>
-            <div class="dayCol">Thu</div>
-            <div class="dayCol">Fri</div>
-            <div class="dayCol">Sat</div>
-        </div>
-        <div class="weekRow" ng-repeat="weak in dayList track by $index">
-            <div class="dayCol" ng-repeat="day in weak track by $index">
-                <span>{{day}}</span>
-            </div> 
-        </div> -->
+
         <table border="1px" cellspacing="0" width="100%">
             <tr>
+                <th>Sun</th>
                 <th>Mon</th>
                 <th>Tue</th>
                 <th>Wed</th>
                 <th>Thu</th>
                 <th>Fri</th>
                 <th>Sat</th>
-                <th>Sun</th>
             </tr>
             <tr ng-repeat="weak in dayList track by $index">
-                <td ng-repeat="day in weak track by $index">{{ day }}</td>
+                <td ng-repeat="day in weak track by $index">{{ day.date }}</td>
             </tr>
         </table>
     </div>
