@@ -72,7 +72,11 @@
                 let cMonth = parseInt(scope.currentMonth);
                 cMonth++;
                 if (cMonth > scope.endMM) {
-                    cMonth = 0;
+                    if(scope.currentYear == scope.startYY) {
+                        cMonth = scope.startMM;
+                    } else {
+                        cMonth = 0;
+                    }
                 }
                 scope.currentMonth = cMonth.toString();
             }
@@ -81,16 +85,24 @@
                 let cMonth = parseInt(scope.currentMonth);
                 cMonth--;
                 if (cMonth < 0) {
-                    cMonth = scope.endMM;
+                    if(scope.currentYear == scope.endYY) {
+                        cMonth = scope.endMM;
+                    } else {
+                        cMonth = 11;
+                    }
                 }
                 scope.currentMonth = cMonth.toString();
             }
 
-            scope.$watch("currentMonth + currentYear", function () {
+            scope.$watch("currentYear", function() {
+                fillMonth();
+                scope.currentMonth = scope.monthList[0].no.toString();
+            })
+
+            scope.$watch("currentMonth", function () {
                 console.log(scope.currentYear);
                 console.log(scope.currentMonth);
                 
-                fillMonth();
                 fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
             })
 
