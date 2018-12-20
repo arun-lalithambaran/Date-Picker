@@ -5,8 +5,8 @@ neptuneController.$inject = ['$scope'];
 function neptuneController($scope) {
     $scope.config = {
         id: 1,
-        minYear: 2000,
-        maxYear: 2018,
+        startDate: "01/11/1995",
+        endDate: "28/06/2018"
     }
 }
 })();
