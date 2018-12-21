@@ -13,6 +13,9 @@
         }
 
         function link(scope, element, attr) {
+
+            scope.userSelectedDate = "";
+            scope.today = new Date();
             scope.startDD = 1;
             scope.startMM = 0;
             scope.startYY = 1995;
@@ -44,21 +47,11 @@
                 scope.endMM = parseInt(endddmmyyyy[2] - 1);
                 scope.endYY = parseInt(endddmmyyyy[3]);
 
-
-                console.log(scope.startDD);
-                console.log(scope.startMM);
-                console.log(scope.startYY);
-                console.log(scope.endDD);
-                console.log(scope.endMM);
-                console.log(scope.endYY);
-
-
-
                 for (let i = scope.startYY; i <= scope.endYY; i++) {
                     scope.yearList.push(i);
                 }
                 scope.currentYear = scope.endYY.toString();
-                
+
                 fillMonth();
 
 
@@ -68,43 +61,58 @@
             init();
 
 
-            scope.nextMonth = function () {
-                let cMonth = parseInt(scope.currentMonth);
-                cMonth++;
-                if (cMonth > scope.endMM) {
-                    if(scope.currentYear == scope.startYY) {
-                        cMonth = scope.startMM;
-                    } else {
-                        cMonth = 0;
+            function getMonthIndex(month) {
+                for(let i = 0; i < scope.monthList.length; i++) {
+                    if(month == scope.monthList[i].no) {
+                        return i;
                     }
                 }
-                scope.currentMonth = cMonth.toString();
+            }
+
+            scope.nextMonth = function () {
+                let id = getMonthIndex(scope.currentMonth);
+                id++;
+                if(id >= scope.monthList.length) {
+                    scope.currentMonth = scope.monthList[0].no.toString();
+                } else {
+                    let cMonth = parseInt(scope.currentMonth);
+                    cMonth++;
+                    scope.currentMonth = cMonth.toString();
+                }
             }
 
             scope.previousMonth = function () {
-                let cMonth = parseInt(scope.currentMonth);
-                cMonth--;
-                if (cMonth < 0) {
-                    if(scope.currentYear == scope.endYY) {
-                        cMonth = scope.endMM;
-                    } else {
-                        cMonth = 11;
-                    }
-                }
-                scope.currentMonth = cMonth.toString();
+               let id = getMonthIndex(scope.currentMonth);
+               id--;
+               if(id < 0) {
+                   scope.currentMonth = scope.monthList[scope.monthList.length - 1].no.toString();
+               } else {
+                   let cMonth = parseInt(scope.currentMonth);
+                   cMonth--;
+                   scope.currentMonth = cMonth.toString();
+               }
             }
 
-            scope.$watch("currentYear", function() {
+            scope.$watch("currentYear", function () {
                 fillMonth();
                 scope.currentMonth = scope.monthList[0].no.toString();
             })
 
             scope.$watch("currentMonth", function () {
-                console.log(scope.currentYear);
-                console.log(scope.currentMonth);
-                
                 fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
             })
+
+            scope.pickDate = function (weekId, dayId) {
+                scope.userSelectedDate = formatNum(scope.dayList[weekId][dayId].date) + "/" + formatNum(parseInt(scope.currentMonth) + 1) + "/" + scope.currentYear;
+                
+                function formatNum(num) {
+                    if(num < 10) {
+                        return ("0" + num);
+                    } else {
+                        return num;
+                    }
+                }
+            }
 
             function parseDate(str) {
                 var m = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
@@ -115,10 +123,9 @@
                 scope.monthList.length = 0;
                 let end = 11;
                 let start = 0;
-                if(scope.currentYear == scope.endYY) {
-                    console.log('endYY');
+                if (scope.currentYear == scope.endYY) {
                     end = scope.endMM;
-                } else if(scope.currentYear == scope.startYY) {
+                } else if (scope.currentYear == scope.startYY) {
                     start = scope.startMM;
                 }
 
@@ -141,9 +148,7 @@
                 let weekDays = [];
                 let dayLength = 31; // default days
                 const date = new Date(year, month, 1);
-                console.log(date);
                 const startDay = date.getDay();
-                console.log("start day : " + startDay);
                 const columnLength = 42; //Max Iteration ( 7 * 6)
                 if (m_31.includes(month)) {
                     dayLength = 31;
@@ -193,7 +198,6 @@
 
             function unitTest() {
                 fillDayList(scope.currentYear, scope.currentMonth);
-                console.log(scope.monthList);
             }
             // unitTest();
         }
