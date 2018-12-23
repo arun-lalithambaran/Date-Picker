@@ -14,8 +14,11 @@
         }
 
         function link(scope, element, attr) {
-
             scope.visible = false;
+            scope.position = {
+                x: 0,
+                y: 50
+            };
 
 
             scope.userSelectedDate = "";
@@ -81,6 +84,10 @@
                     scope.currentMonth = scope.monthList[0].no.toString();
                 }
                 fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
+
+                if(!scope.config.iconSize) {
+                    scope.config.iconSize = '32';
+                }
             }
             init();
 
@@ -239,7 +246,7 @@
                 }
             }
 
-            scope.toggleVisible = function(stat = null) {
+            scope.toggleVisible = function($event, stat = null) {
                 if(stat) {
                     scope.visible = stat;
                 } else {
