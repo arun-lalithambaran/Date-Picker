@@ -7,6 +7,7 @@
         return {
             templateUrl: 'app/datepicker/templates/datePickerTemplate.html',
             link: link,
+            restrict: "EA",
             scope: {
                 config: "="
             }
@@ -15,20 +16,22 @@
         function link(scope, element, attr) {
 
             scope.userSelectedDate = "";
-            scope.today = new Date();
+            let today = new Date();
+            scope.todayString = formatNum(today.getDate()) + "/" + formatNum(today.getMonth() + 1) + "/" + today.getFullYear();
             scope.startDD = 1;
             scope.startMM = 0;
             scope.startYY = 1995;
             scope.endDD = 28;
             scope.endMM = 11;
             scope.endYY = 2018;
+            scope.active = {};
 
             scope.yearList = [];
             scope.monthList = [];
             scope.dayList = [];
             scope.currentYear;
             scope.currentMonth;
-            scope.weeks = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            scope.weeks = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             scope.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
             function init() {
@@ -38,6 +41,15 @@
 
                 let startddmmyyyy = parseDate(scope.config.startDate);
                 let endddmmyyyy = parseDate(scope.config.endDate);
+                if (scope.config.activeDate) {
+                    let activeddmmyyyy = parseDate(scope.config.activeDate);
+                    scope.active.dd = parseInt(activeddmmyyyy[1]);
+                    scope.active.mm = parseInt(activeddmmyyyy[2]) - 1;
+                    console.log(scope.active.mm);
+                    scope.active.yy = parseInt(activeddmmyyyy[3]);
+                } else {
+                    scope.active = null;
+                }
 
                 scope.startDD = parseInt(startddmmyyyy[1]);
                 scope.startMM = parseInt(startddmmyyyy[2] - 1);
@@ -49,6 +61,9 @@
 
                 for (let i = scope.startYY; i <= scope.endYY; i++) {
                     scope.yearList.push(i);
+                }
+                if(scope.active) {
+                    scope.currentYear = scope.active.yy.toString();
                 }
                 scope.currentYear = scope.endYY.toString();
 
@@ -62,8 +77,8 @@
 
 
             function getMonthIndex(month) {
-                for(let i = 0; i < scope.monthList.length; i++) {
-                    if(month == scope.monthList[i].no) {
+                for (let i = 0; i < scope.monthList.length; i++) {
+                    if (month == scope.monthList[i].no) {
                         return i;
                     }
                 }
@@ -72,7 +87,7 @@
             scope.nextMonth = function () {
                 let id = getMonthIndex(scope.currentMonth);
                 id++;
-                if(id >= scope.monthList.length) {
+                if (id >= scope.monthList.length) {
                     scope.currentMonth = scope.monthList[0].no.toString();
                 } else {
                     let cMonth = parseInt(scope.currentMonth);
@@ -82,19 +97,22 @@
             }
 
             scope.previousMonth = function () {
-               let id = getMonthIndex(scope.currentMonth);
-               id--;
-               if(id < 0) {
-                   scope.currentMonth = scope.monthList[scope.monthList.length - 1].no.toString();
-               } else {
-                   let cMonth = parseInt(scope.currentMonth);
-                   cMonth--;
-                   scope.currentMonth = cMonth.toString();
-               }
+                let id = getMonthIndex(scope.currentMonth);
+                id--;
+                if (id < 0) {
+                    scope.currentMonth = scope.monthList[scope.monthList.length - 1].no.toString();
+                } else {
+                    let cMonth = parseInt(scope.currentMonth);
+                    cMonth--;
+                    scope.currentMonth = cMonth.toString();
+                }
             }
 
             scope.$watch("currentYear", function () {
                 fillMonth();
+                if (scope.currentMonth == '0') {
+                    fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
+                }
                 scope.currentMonth = scope.monthList[0].no.toString();
             })
 
@@ -103,14 +121,16 @@
             })
 
             scope.pickDate = function (weekId, dayId) {
-                scope.userSelectedDate = formatNum(scope.dayList[weekId][dayId].date) + "/" + formatNum(parseInt(scope.currentMonth) + 1) + "/" + scope.currentYear;
-                
-                function formatNum(num) {
-                    if(num < 10) {
-                        return ("0" + num);
-                    } else {
-                        return num;
-                    }
+                if (scope.dayList[weekId][dayId].date) {
+                    scope.userSelectedDate = formatNum(scope.dayList[weekId][dayId].date) + "/" + formatNum(parseInt(scope.currentMonth) + 1) + "/" + scope.currentYear;
+                }
+            }
+
+            function formatNum(num) {
+                if (num < 10) {
+                    return ("0" + num);
+                } else {
+                    return num;
                 }
             }
 
@@ -170,7 +190,8 @@
                     if (i >= startDay && i <= dayLength + startDay - 1) {
                         let day = {
                             date: dayNo,
-                            day: scope.weeks[j]
+                            day: scope.weeks[j],
+                            fullDateString: formatNum(dayNo) + "/" + formatNum(parseInt(month) + 1) + "/" + year
                         }
                         weekDays.push(day);
                         dayNo++;

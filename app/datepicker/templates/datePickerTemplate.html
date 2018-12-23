@@ -1,8 +1,14 @@
 <style>
     .container {
-    width: 300px;
+    /* position: absolute;
+    top: 150px;
+    left: 10px; */
+    width: 315px;
     border: 1px solid #e2e2e2;
     margin-top: 10px;
+    user-select: none;
+    border-radius: 5px;
+    box-shadow: 2px 3px 10px 3px rgba(0, 0, 0, 0.3);
 }
 .header {
     display: flex;
@@ -20,27 +26,60 @@
 }
 td {
     text-align: center;
+    padding: 5px 0px;
+    width: 45px;
+    border-radius: 4px;
+}
+/* td:hover {
+    background-color: rgb(245, 254, 255);
+} */
+th {
+    padding: 3px 0px;
 }
 .mainContainer {
-    width: 300px;
+    width: 350px;
     margin: 20px;
 }
 .input {
     width: 100%;
     padding: 10px;
 }
-i.left {
-    transform: rotateX(180deg);
+.material-icons.left {
+    transform: rotateY(180deg);
+}
+.material-icons.btn {
+    cursor: pointer;
+}
+.selectors select {
+    padding: 2px 0px;
+    border-radius: 4px;
+}
+.holiday {
+    color: red;
+}
+.picked {
+    background-color: cadetblue;
+}
+.today {
+    /* background-color: green; */
+    border: 1px solid rgb(187, 187, 248);
+    border-radius: 4px;
 }
 </style>
-{{currentMonth}}
+<div class="temp">
+user selected date : {{userSelectedDate}}<br>
+Current Month : {{currentMonth}}<br>
+Current Year : {{currentYear}}<br>
+today : {{todayString}}<br>
+</div>
+
 <div class="mainContainer">
     <input ng-model="userSelectedDate" class="input" type="text" placeholder="Pick Date">
 
-    <div class="container">
+    <div class="container" ng-click="event.stopPropagation()">
         <div class="header">
-            <div style="width: 20%">
-                <i ng-click="previousMonth()" class="material-icons left">
+            <div style="width: 12%; text-align: center">
+                <i ng-click="previousMonth()" class="material-icons btn left">
                     play_circle_outline
                 </i>
                 <!-- <button ng-click="previousMonth()">Left</button> -->
@@ -53,8 +92,8 @@ i.left {
                     <option ng-repeat="year in yearList track by $index">{{year}}</option>
                 </select>
             </div>
-            <div style="width: 20%">
-                <i ng-click="nextMonth()" class="material-icons">
+            <div style="width: 12%; text-align: center">
+                <i ng-click="nextMonth()" class="material-icons btn">
                     play_circle_outline
                 </i>
                 <!-- <button ng-click="nextMonth()">Right</button> -->
@@ -65,7 +104,7 @@ i.left {
 
             <table border="0" cellspacing="0" width="100%">
                 <tr>
-                    <th>Sun</th>
+                    <th class="holiday">Sun</th>
                     <th>Mon</th>
                     <th>Tue</th>
                     <th>Wed</th>
@@ -74,7 +113,7 @@ i.left {
                     <th>Sat</th>
                 </tr>
                 <tr ng-repeat="week in dayList track by $index">
-                    <td ng-click="pickDate(dayList.indexOf(week), week.indexOf(day))" ng-repeat="day in week track by $index">{{
+                    <td ng-click="pickDate(dayList.indexOf(week), week.indexOf(day))" ng-repeat="day in week track by $index" ng-class="{holiday : day.day == 'Sun', picked : day.fullDateString == userSelectedDate, today: day.fullDateString == todayString}">{{
                         day.date }}</td>
                 </tr>
             </table>
