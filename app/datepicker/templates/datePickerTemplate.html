@@ -6,7 +6,6 @@
     width: 315px;
     border: 1px solid #e2e2e2;
     margin-top: 10px;
-    user-select: none;
     border-radius: 5px;
     box-shadow: 2px 3px 10px 3px rgba(0, 0, 0, 0.3);
 }
@@ -37,6 +36,7 @@ th {
     padding: 3px 0px;
 }
 .mainContainer {
+    user-select: none;
     width: 350px;
     margin: 20px;
 }
@@ -65,6 +65,9 @@ th {
     border: 1px solid rgb(187, 187, 248);
     border-radius: 4px;
 }
+.pickBtn {
+    font-size: 42px;
+}
 </style>
 <div class="temp">
 user selected date : {{userSelectedDate}}<br>
@@ -73,10 +76,12 @@ Current Year : {{currentYear}}<br>
 today : {{todayString}}<br>
 </div>
 
-<div class="mainContainer">
-    <input ng-model="userSelectedDate" class="input" type="text" placeholder="Pick Date">
+<div class="mainContainer" ng-click="$event.stopPropagation()">
+    <!-- <input ng-model="userSelectedDate" class="input" type="text" placeholder="Pick Date"> -->
 
-    <div class="container" ng-click="event.stopPropagation()">
+    <i class="material-icons btn pickBtn" ng-click="toggleVisible()">date_range</i>
+
+    <div class="container" ng-show="visible">
         <div class="header">
             <div style="width: 12%; text-align: center">
                 <i ng-click="previousMonth()" class="material-icons btn left">

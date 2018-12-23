@@ -15,6 +15,9 @@
 
         function link(scope, element, attr) {
 
+            scope.visible = false;
+
+
             scope.userSelectedDate = "";
             let today = new Date();
             scope.todayString = formatNum(today.getDate()) + "/" + formatNum(today.getMonth() + 1) + "/" + today.getFullYear();
@@ -45,10 +48,12 @@
                     let activeddmmyyyy = parseDate(scope.config.activeDate);
                     scope.active.dd = parseInt(activeddmmyyyy[1]);
                     scope.active.mm = parseInt(activeddmmyyyy[2]) - 1;
-                    console.log(scope.active.mm);
                     scope.active.yy = parseInt(activeddmmyyyy[3]);
                 } else {
-                    scope.active = null;
+                    let todayddmmyy = parseDate(scope.todayString);
+                    scope.active.dd = parseInt(todayddmmyy[1]);
+                    scope.active.mm = parseInt(todayddmmyy[2]) - 1;
+                    scope.active.yy = parseInt(todayddmmyy[3]);
                 }
 
                 scope.startDD = parseInt(startddmmyyyy[1]);
@@ -63,14 +68,18 @@
                     scope.yearList.push(i);
                 }
                 if(scope.active) {
-                    scope.currentYear = scope.active.yy.toString();
+                    scope.currentYear = formatNum(scope.active.yy).toString();
+                } else {
+                    scope.currentYear = scope.endYY.toString();
                 }
-                scope.currentYear = scope.endYY.toString();
 
                 fillMonth();
 
-
-                scope.currentMonth = scope.monthList[0].no.toString();
+                if(scope.active) {
+                    scope.currentMonth = scope.active.mm.toString();
+                } else {
+                    scope.currentMonth = scope.monthList[0].no.toString();
+                }
                 fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
             }
             init();
@@ -110,10 +119,16 @@
 
             scope.$watch("currentYear", function () {
                 fillMonth();
-                if (scope.currentMonth == '0') {
-                    fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
+                if(scope.currentYear == scope.endYY) {
+                    if(scope.currentMonth > scope.monthList[scope.monthList.length - 1].no) {
+                        scope.currentMonth = scope.monthList[scope.monthList.length - 1].no.toString();
+                    }
+                } else if(scope.currentYear == scope.startYY) {
+                    if(scope.currentMonth < scope.monthList[0].no) {
+                        scope.currentMonth = scope.monthList[0].no.toString();
+                    }
                 }
-                scope.currentMonth = scope.monthList[0].no.toString();
+                fillDayList(parseInt(scope.currentYear), parseInt(scope.currentMonth));
             })
 
             scope.$watch("currentMonth", function () {
@@ -123,6 +138,13 @@
             scope.pickDate = function (weekId, dayId) {
                 if (scope.dayList[weekId][dayId].date) {
                     scope.userSelectedDate = formatNum(scope.dayList[weekId][dayId].date) + "/" + formatNum(parseInt(scope.currentMonth) + 1) + "/" + scope.currentYear;
+                    let dateObj = new Date(parseInt(scope.currentYear), parseInt(scope.currentMonth), parseInt(scope.dayList[weekId][dayId].date));
+                    let date = {
+                        dateObj: dateObj,
+                        dateString: scope.userSelectedDate
+                    }
+                    scope.$emit("datePicker_" + scope.config.id, date);
+                    scope.toggleVisible(false);
                 }
             }
 
@@ -217,10 +239,26 @@
                 }
             }
 
-            function unitTest() {
-                fillDayList(scope.currentYear, scope.currentMonth);
+            scope.toggleVisible = function(stat = null) {
+                if(stat) {
+                    scope.visible = stat;
+                } else {
+                    scope.visible = !scope.visible;
+                }
             }
-            // unitTest();
+
+            function clickAction() {
+                if(scope.visible = true) {
+                    scope.toggleVisible(false);
+                    scope.$apply();
+                }
+            }
+
+            angular.element($document).on('click', clickAction);
+
+            scope.$on('$destroy', function(event) {
+                angular.element($document).off('click', clickAction);
+            })
         }
     }
 })();
