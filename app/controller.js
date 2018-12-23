@@ -7,7 +7,7 @@ function neptuneController($scope) {
         id: 1,
         startDate: "01/11/1995",
         endDate: "28/06/2019",
-        iconSize: "22"
+        iconSize: "38"
     }
     $scope.pickedDate = "";
 

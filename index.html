@@ -10,11 +10,19 @@
 
 <body ng-app="neptune" ng-controller="neptuneController">
 
-    <!-- <div date-picker-directive="true" config="config">
-        <input type="text" ng-model="pickedDate">
+    <!-- <div>
+        <input type="text" ng-model="pickedDate" placeholder="Pick Date">
+        <date-picker-directive config="config"></date-picker-directive>
     </div> -->
-    <input type="text" ng-model="pickedDate" placeholder="Pick Date">
-    <date-picker-directive config="config"></date-picker-directive>
+
+    <div class="box">
+        <div>
+            <label for="dob">Date Of Birth</label><br>
+            <input type="text" ng-model="pickedDate" placeholder="Date Of Birth" id="dob">
+            <date-picker-directive config="config"></date-picker-directive>
+        </div>
+      
+    </div>
     
     <script src="app/app.js"></script>
     <script src="app/constants.js"></script>
