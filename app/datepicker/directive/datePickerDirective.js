@@ -144,7 +144,7 @@
             })
 
             scope.pickDate = function (weekId, dayId) {
-                if (scope.dayList[weekId][dayId].date) {
+                if (scope.dayList[weekId][dayId].date && scope.dayList[weekId][dayId].status) {
                     scope.userSelectedDate = formatNum(scope.dayList[weekId][dayId].date) + "/" + formatNum(parseInt(scope.currentMonth) + 1) + "/" + scope.currentYear;
                     let dateObj = new Date(parseInt(scope.currentYear), parseInt(scope.currentMonth), parseInt(scope.dayList[weekId][dayId].date));
                     let date = {
@@ -197,6 +197,7 @@
                 const m_28 = [1];
                 let weekDays = [];
                 let dayLength = 31; // default days
+                let dayStatus = true;
                 const date = new Date(year, month, 1);
                 const startDay = date.getDay();
                 const columnLength = 42; //Max Iteration ( 7 * 6)
@@ -212,15 +213,30 @@
                     }
                 }
                 for (let i = 0, j = 0; i < columnLength; i++ , j++) {
+                    dayStatus = true;
                     if (j === 7 || i === columnLength - 1) {
                         scope.dayList.push(weekDays.slice());
                         weekDays.length = 0;
                         j = 0;
                     }
                     if (i >= startDay && i <= dayLength + startDay - 1) {
+                        if(scope.currentYear == scope.endYY) {
+                            if(scope.currentMonth == scope.monthList[scope.monthList.length - 1].no) {
+                                if(dayNo > scope.endDD) {
+                                    dayStatus = false;
+                                }
+                            }
+                        } else if(scope.currentYear == scope.startYY) {
+                            if(scope.currentMonth == scope.monthList[0].no) {
+                                if(dayNo < scope.startDD) {
+                                    dayStatus = false;
+                                }
+                            }
+                        }
                         let day = {
                             date: dayNo,
                             day: scope.weeks[j],
+                            status: dayStatus,
                             fullDateString: formatNum(dayNo) + "/" + formatNum(parseInt(month) + 1) + "/" + year
                         }
                         weekDays.push(day);

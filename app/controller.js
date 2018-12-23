@@ -5,8 +5,8 @@ neptuneController.$inject = ['$scope'];
 function neptuneController($scope) {
     $scope.config = {
         id: 1,
-        startDate: "01/11/1995",
-        endDate: "28/06/2019",
+        startDate: "15/11/1995",
+        endDate: "20/06/2019",
         iconSize: "38"
     }
     $scope.pickedDate = "";

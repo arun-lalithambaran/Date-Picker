@@ -86,6 +86,11 @@
         font-size: {{config.iconSize}}px;
         vertical-align: middle;
     }
+    .desabled {
+        /* background-color: lightgray; */
+        /* border-radius: 0px; */
+        color: lightgray;
+    }
 </style>
 
 <div class="mainContainer" ng-click="$event.stopPropagation()">
@@ -130,7 +135,7 @@
                 </tr>
                 <tr ng-repeat="week in dayList track by $index">
                     <td ng-click="pickDate(dayList.indexOf(week), week.indexOf(day))" ng-repeat="day in week track by $index"
-                        ng-class="{holiday : day.day == 'Sun', picked : day.fullDateString == userSelectedDate, today: day.fullDateString == todayString}">{{
+                        ng-class="{holiday : day.day == 'Sun', picked : day.fullDateString == userSelectedDate, today: day.fullDateString == todayString, desabled: !day.status}">{{
                         day.date }}</td>
                 </tr>
             </table>
