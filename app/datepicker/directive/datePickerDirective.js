@@ -15,7 +15,7 @@
 
         function link(scope, element, attr) {
             scope.visible = false;
-            console.log(angular.element(element)[0].offsetLeft);
+            // console.log(angular.element(element)[0].offsetLeft);
             scope.position = {
                 x: 0,
                 y: 50

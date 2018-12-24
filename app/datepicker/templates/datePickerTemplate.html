@@ -11,8 +11,8 @@
     .container {
         position: absolute;
         background-color: #fff;
-        right: {{position.x}}px;
-        top: {{position.y}}px;
+        right: 0px;
+        top: 50px;
         width: 315px;
         border: 1px solid #e2e2e2;
         /* margin-top: 10px; */
@@ -75,6 +75,9 @@
     .picked {
         background-color: cadetblue;
     }
+    .picked:hover {
+        background-color: cadetblue!important;
+    }
 
     .today {
         /* background-color: green; */
@@ -83,7 +86,7 @@
     }
 
     .pickBtn {
-        font-size: {{config.iconSize}}px;
+        font-size: 32px;
         vertical-align: middle;
     }
     .desabled {
@@ -91,13 +94,16 @@
         /* border-radius: 0px; */
         color: lightgray;
     }
+    .valid:hover {
+        background-color: lightcyan;
+    }
 </style>
 
 <div class="mainContainer" ng-click="$event.stopPropagation()">
 
-    <i class="material-icons btn pickBtn" ng-click="toggleVisible($event)">date_range</i>
+    <i class="material-icons btn pickBtn" style="font-size: {{config.iconSize}}px" ng-click="toggleVisible($event)">date_range</i>
 
-    <div class="container" ng-show="visible">
+    <div class="container" style="top: {{position.y}}px; right: {{position.x}}px" ng-show="visible">
         <div class="header">
             <div style="width: 12%; text-align: center">
                 <i ng-click="previousMonth()" class="material-icons btn left">
@@ -135,7 +141,7 @@
                 </tr>
                 <tr ng-repeat="week in dayList track by $index">
                     <td ng-click="pickDate(dayList.indexOf(week), week.indexOf(day))" ng-repeat="day in week track by $index"
-                        ng-class="{holiday : day.day == 'Sun', picked : day.fullDateString == userSelectedDate, today: day.fullDateString == todayString, desabled: !day.status}">{{
+                        ng-class="{holiday : day.day == 'Sun', picked : day.fullDateString == userSelectedDate, today: day.fullDateString == todayString, desabled: !day.status, valid: day.status}">{{
                         day.date }}</td>
                 </tr>
             </table>
